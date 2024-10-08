@@ -26,9 +26,22 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(fontSize: 30.0, color: Colors.white),
         ),
       ),
-      body: const Center(
-        child: Text('Welcome to TaskMe!'),
-      ),
+      body: _tasksList(),
+    );
+  }
+
+  Widget _tasksList() {
+    return ListView.builder(
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return Card(
+          child: ListTile(
+            title: Text('Task $index'),
+            subtitle: Text(DateTime.now().toString()),
+            trailing: const Icon(color: Colors.red, Icons.check_box_outlined),
+          ),
+        );
+      },
     );
   }
 }
