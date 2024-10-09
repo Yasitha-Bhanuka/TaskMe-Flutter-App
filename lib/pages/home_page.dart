@@ -115,34 +115,48 @@ class _HomePageState extends State<HomePage> {
 
   void _displayTaskPopup() {
     showDialog(
-        context: context,
-        builder: (BuildContext _context) {
-          return AlertDialog(
-            title: const Text('Add New Task'),
-            content: TextField(
-              onSubmitted: (_) {
-                if (_newTaskContent != null) {
-                  var _task = Task(
-                      content: _newTaskContent!,
-                      timestamp: DateTime.now(),
-                      done: false);
-                  _box!.add(_task.toMap());
-                }
-                setState(() {
-                  _newTaskContent = null;
-                  Navigator.pop(_context);
-                });
-              },
-              onChanged: (value) {
-                setState(() {
-                  _newTaskContent = value;
-                });
-              },
-              decoration: const InputDecoration(
-                hintText: 'Task content',
-              ),
+      context: context,
+      builder: (BuildContext _context) {
+        return AlertDialog(
+          title: const Text('Add New Task'),
+          content: TextField(
+            onChanged: (value) {
+              setState(() {
+                _newTaskContent = value;
+              });
+            },
+            decoration: const InputDecoration(
+              hintText: 'Task content',
             ),
-          );
-        });
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                if (_newTaskContent != null && _newTaskContent!.isNotEmpty) {
+                  var _task = Task(
+                    content: _newTaskContent!,
+                    timestamp: DateTime.now(),
+                    done: false,
+                  );
+                  _box!.add(_task.toMap());
+                  setState(() {
+                    _newTaskContent = null;
+                  });
+                }
+                Navigator.pop(_context);
+              },
+              child: const Text('Add', style: TextStyle(color: Colors.red)),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(_context);
+              },
+              child:
+                  const Text('Cancel', style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
