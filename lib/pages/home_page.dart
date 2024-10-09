@@ -110,26 +110,28 @@ class _HomePageState extends State<HomePage> {
         builder: (BuildContext _context) {
           return AlertDialog(
             title: const Text('Add New Task'),
-            content: Column(
-              children: [
-                TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      _newTaskContent = value;
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    hintText: 'Task content',
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    print("New task content: $_newTaskContent");
-                    Navigator.of(_context).pop();
-                  },
-                  child: const Text('Add Task'),
-                ),
-              ],
+            content: TextField(
+              onSubmitted: (_) {
+                if (_newTaskContent != null) {
+                  var _task = Task(
+                      content: _newTaskContent!,
+                      timestamp: DateTime.now(),
+                      done: false);
+                  _box!.add(_task.toMap());
+                }
+                setState(() {
+                  _newTaskContent = null;
+                  Navigator.pop(_context);
+                });
+              },
+              onChanged: (value) {
+                setState(() {
+                  _newTaskContent = value;
+                });
+              },
+              decoration: const InputDecoration(
+                hintText: 'Task content',
+              ),
             ),
           );
         });
