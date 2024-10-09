@@ -9,11 +9,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late double _deviceWidth, _deviceHeight;
+  String? _newTaskContent;
 
   @override
   Widget build(BuildContext context) {
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
+
+    print("Input value: $_newTaskContent");
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -60,8 +64,39 @@ class _HomePageState extends State<HomePage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(50.0),
       ),
-      onPressed: () {},
+      onPressed: _displayTaskPopup,
       child: const Icon(Icons.add, color: Colors.white),
     );
+  }
+
+  void _displayTaskPopup() {
+    showDialog(
+        context: context,
+        builder: (BuildContext _context) {
+          return AlertDialog(
+            title: const Text('Add New Task'),
+            content: Column(
+              children: [
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _newTaskContent = value;
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    hintText: 'Task content',
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    print("New task content: $_newTaskContent");
+                    Navigator.of(_context).pop();
+                  },
+                  child: const Text('Add Task'),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }
