@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:taskme/models/task.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,7 +12,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late double _deviceWidth, _deviceHeight;
   String? _newTaskContent;
-
+  Box? _box;
   @override
   void initState() {
     super.initState();
@@ -49,9 +50,10 @@ class _HomePageState extends State<HomePage> {
   Widget _tasksView() {
     return FutureBuilder(
       // future: Future.delayed(Duration(seconds: 2)),
-      future: Hive.openBox('tasks'),
+      future: Hive.openBox('tasks'), //
       builder: (BuildContext _context, AsyncSnapshot _snapshot) {
         if (_snapshot.connectionState == ConnectionState.done) {
+          _box = _snapshot.data;
           return _tasksList();
         } else {
           return const Center(child: CircularProgressIndicator());
@@ -61,16 +63,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _tasksList() {
+    // Task _newTask =
+    //     Task(content: "Goto Gym", timestamp: DateTime.now(), done: false);
+    // _box?.add(_newTask.toMap());
+    List tasks = _box!.values.toList();
     return Padding(
       padding: EdgeInsets.all(_deviceWidth * 0.03),
       child: ListView.builder(
-        itemCount: 5,
-        itemBuilder: (context, index) {
+        itemCount: tasks.length,
+        itemBuilder: (context, _index) {
+          var task = Task.fromMap(tasks[_index]);
           return Card(
             child: ListTile(
-              title: Text('Task $index'),
-              subtitle: Text(DateTime.now().toString()),
-              trailing: const Icon(color: Colors.red, Icons.check_box_outlined),
+              title: Text(
+                task.content,
+                style: TextStyle(
+                    decoration: task.done ? TextDecoration.lineThrough : null),
+              ),
+              subtitle: Text(task.timestamp.toString()),
+              trailing: Icon(
+                  task.done
+                      ? Icons.check_box_outlined
+                      : Icons.check_box_outline_blank,
+                  color: Colors.red),
             ),
           );
         },
