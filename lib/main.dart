@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:taskme/pages/home_page.dart';
 
-void main() {
+void main() async {
+  // this is the short way to if we are not using splash screen
+  // initialize Hive
+  await Hive.initFlutter("hive_boxes");
   runApp(const MyApp());
 }
 
